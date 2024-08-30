@@ -34,6 +34,7 @@ setOptions({
 
 const defaultEvents: MbscCalendarEvent[] = [
   {
+    id:1,
     start: '2024-08-30T13:00',
     end: '2024-08-30T15:00',
     title: 'General orientation',
@@ -258,7 +259,7 @@ const App: FC = () => {
 
   const myDefaultEvent = useCallback(
     () => ({
-      resource: [1, 2, 3, 4, 5, 6],
+      resource: [1],
     }),
     [],
   );
@@ -337,12 +338,18 @@ const App: FC = () => {
     },
     [isNewEvent, myEvents, tempEvent],
   );
-  const onEventCreate = useCallback((args, inst) => {
-    args.event.resource = [1, 2, 3, 4, 5, 6];
-  }, []);
+  // const onEventCreate = useCallback((args, inst) => {
+  //   args.event.resource = [1, 2, 3, 4, 5, 6];
+  // }, []);
 
   return (
     <>
+    <h1>Myevents - {JSON.stringify(myEvents)}</h1>
+    <h1>isToastopen - {isToastOpen}</h1>
+    <h1>toastMessage - {JSON.stringify(toastMessage)}</h1>
+    <h1>tempEvent - {JSON.stringify(tempEvent)}</h1>
+    <h1>isNewEvent - {JSON.stringify(isNewEvent)}</h1>
+    <h1>isNewEvent - {JSON.stringify(myResource)}</h1>
       <Eventcalendar
         timezonePlugin={momentTimezone}
         dataTimezone="utc"
@@ -377,6 +384,8 @@ const App: FC = () => {
           onOpenChange={()=>{
             setConfirmOpen(false);
           }}
+          handleEventCreated={handleEventCreated}
+          tempEvent={tempEvent}
         />
     </>
   );
