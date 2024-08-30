@@ -341,6 +341,9 @@ const App: FC = () => {
   // const onEventCreate = useCallback((args, inst) => {
   //   args.event.resource = [1, 2, 3, 4, 5, 6];
   // }, []);
+  const onEventCreate = useCallback((args : any, inst:any) => {
+    args.event.resource = [1, 2, 3, 4, 5, 6];
+  }, []);
 
   return (
     <>
