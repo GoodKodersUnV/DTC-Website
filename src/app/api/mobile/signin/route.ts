@@ -1,3 +1,4 @@
+import { signin } from "@/actions/signin";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -8,7 +9,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json("Email and password are required");
     }
 
-    return NextResponse.json({ username, password });
+    const user = await signin(username, password);
+
+    return NextResponse.json(user);
+    
   } catch (e) {
     return NextResponse.json(e);
   }
