@@ -22,7 +22,7 @@ export default async function RootLayout({
       refetchInterval={5 * 60}// 5 minutes
       session={session}>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={`${inter.className}`}>
           <Provider>{children}</Provider>
         </body>
       </html>
