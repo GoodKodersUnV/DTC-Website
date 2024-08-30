@@ -27,6 +27,7 @@ export const authRoutes = [
  * @type {string}
  */
 export const apiAuthPrefix = "/api/auth";
+export const mobileApiPrefix = "/api/mobile";
 
 /**
  * The default redirect path after logging in
