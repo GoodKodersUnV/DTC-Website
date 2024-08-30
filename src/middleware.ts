@@ -6,6 +6,7 @@ import {
   authRoutes,
   publicRoutes, 
   DEFAULT_LOGIN_REDIRECT,
+  mobileApiPrefix,
 } from "@/routes";
 export const { auth } = NextAuth(authConfig);
 
@@ -13,11 +14,12 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isMobileApiRoute = nextUrl.pathname.startsWith(mobileApiPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isCronRoute = nextUrl.pathname.startsWith("/api/cron");
 
-  if (isApiAuthRoute || isCronRoute) {
+  if (isApiAuthRoute || isCronRoute || isMobileApiRoute) {
     return;
   }
 
