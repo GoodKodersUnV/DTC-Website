@@ -10,6 +10,8 @@ datasource db {
 enum Role {
   ADMIN
   USER
+  DRIVER
+  CONDUCTOR
 }
 
 model User {
@@ -22,7 +24,7 @@ model User {
 
   role Role @default(USER)
 
-  lastLogin     DateTime[]
+  lastLogin     DateTime?
   emailVerified DateTime?
 
   oneTimePassword String @default(uuid())
@@ -32,7 +34,10 @@ model User {
 
   account        Account[]
   profile        Profile?
-  Session         Session[]
+  sessions       Session[]
+  trips          Trip[]    @relation("PassengerTrips")
+  drivenTrips    Trip[]    @relation("DriverTrips")
+  conductedTrips Trip[]    @relation("ConductorTrips")
 }
 
 model Profile {
@@ -42,9 +47,90 @@ model Profile {
   userId String @unique
 
   bio String?
+  age Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum VehicleType {
+  BUS
+}
+
+model Vehicle {
+  id          String      @id @default(uuid())
+  name        String?
+  plateNumber String?
+  description String?
+  image       String?
+  type        VehicleType @default(BUS)
+  capacity    Int?
+  trips       Trip[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Trip {
+  id String @id @default(uuid())
+
+  startAt DateTime
+  endAt   DateTime
+
+  from   Location @relation(name: "TripFrom", fields: [fromId], references: [id])
+  fromId String
+
+  to   Location @relation(name: "TripTo", fields: [toId], references: [id])
+  toId String
+
+  wayPoints Waypoint[]
+
+  liveLocation Location[]
+
+  driver   User   @relation(name: "DriverTrips", fields: [driverId], references: [id])
+  driverId String
+
+  conductor   User   @relation(name: "ConductorTrips", fields: [conductorId], references: [id])
+  conductorId String
+
+  passengers User[]   @relation(name: "PassengerTrips")
+
+  Vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Location {
+  id        String     @id @default(uuid())
+  name      String?
+  latitude  String?
+  longitude String?
+  address   String?
+  city      String?
+  state     String?
+  country   String?
+  zip       String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  TripFrom  Trip[]     @relation("TripFrom")
+  TripTo    Trip[]     @relation("TripTo")
+  Waypoints Waypoint[]
+  Trip      Trip?      @relation(fields: [tripId], references: [id])
+  tripId    String?
+}
+
+model Waypoint {
+  id         String   @id @default(uuid())
+  trip       Trip     @relation(fields: [tripId], references: [id])
+  tripId     String
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tripId, locationId])
 }
 
 model Account {
@@ -71,8 +157,8 @@ model Session {
   userId       String
   expires      DateTime
   sessionToken String   @unique
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 }
