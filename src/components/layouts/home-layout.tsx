@@ -49,7 +49,7 @@ export default function HomeLayout({
       <div className="flex">
         <Sidebar items={items} menu={menu} setMenu={setMenu} />
         <Suspense fallback={<Loading />}>
-          <div className={`w-full ps-40`}>{children}</div>
+          <div className={`w-full ml-[140px]`}>{children}</div>
         </Suspense>
       </div>
     </div>
