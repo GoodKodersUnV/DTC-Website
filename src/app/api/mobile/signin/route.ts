@@ -1,5 +1,6 @@
-import { signin } from "@/actions/signin";
 import { NextRequest, NextResponse } from "next/server";
+import bcryptjs from "bcryptjs";
+import { db } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,11 +10,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json("Email and password are required");
     }
 
-    const user = await signin(username, password);
+    const user = await db.user.findUnique({
+      where: {
+        username: username.toUpperCase(),
+      },
+    });
 
-    return NextResponse.json(user);
-    
+    if(!user || !user.password) {
+      return NextResponse.json(
+        {
+          error: "User not found",
+        },
+        { status: 401 }
+      );
+    }
+
+    const valid = await bcryptjs.compare(password as string, user.password);
+
+
+    if(!valid) {
+      return NextResponse.json(
+        {
+          error: "Invalid username or password",
+        },
+      );
+    }
+
+    return NextResponse.json(user, { status: 200 });
   } catch (e) {
-    return NextResponse.json(e);
+    return NextResponse.json(
+      {
+        error: "User not found",
+      },
+      { status: 401 }
+    );
   }
 }
