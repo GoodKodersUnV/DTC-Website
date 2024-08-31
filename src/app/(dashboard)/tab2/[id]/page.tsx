@@ -11,7 +11,7 @@ declare global {
 }
 
 interface Bus {
-  id: number;
+  id: string;
   from: string;
   to: string;
   waypoints: string[];
@@ -43,7 +43,7 @@ const BusDetails = () => {
       const response = await axios.post(`/api/trip/${id}`, { id });
       const data = response.data;
 
-      const reqdata = {
+      const reqdata: Bus = {
         id: data.id,
         from: data.from.name,
         to: data.to.name,
@@ -54,7 +54,6 @@ const BusDetails = () => {
         liveLocation: data.liveLocation[0].name || "",
       };
 
-      console.log(reqdata);
       setBus(reqdata);
     } catch (error) {
       console.error("Failed to fetch bus data", error);
@@ -95,12 +94,9 @@ const BusDetails = () => {
         const liveLocationCoords = await getCoordinates(bus.liveLocation || "");
 
         const validWaypoints = waypointsWithCoords.filter((coord) => coord);
-        if (startCoords && endCoords && liveLocationCoords) {
+        if (startCoords && endCoords) {
           const mapInstance = new window.google.maps.Map(mapRef.current!, {
-            center: {
-              lat: validWaypoints[0]?.lat || 0,
-              lng: validWaypoints[0]?.lng || 0,
-            },
+            center: startCoords,
             zoom: 10,
           });
 
@@ -125,25 +121,24 @@ const BusDetails = () => {
             }
 
             new window.google.maps.Marker({
-              position: { lat: waypoint.lat, lng: waypoint.lng },
+              position: { lat: waypoint!.lat, lng: waypoint!.lng },
               map: mapInstance,
-              title: waypoint.name,
+              title: waypoint!.name,
               icon: iconOptions,
             });
           });
 
-          new window.google.maps.Marker({
-            position: {
-              lat: liveLocationCoords.lat,
-              lng: liveLocationCoords.lng,
-            },
-            map: mapInstance,
-            title: "Live Location",
-            icon: {
-              url: "https://cdn-icons-png.flaticon.com/128/635/635705.png",
-              scaledSize: new window.google.maps.Size(25, 25),
-            },
-          });
+          if (liveLocationCoords) {
+            new window.google.maps.Marker({
+              position: liveLocationCoords,
+              map: mapInstance,
+              title: "Live Location",
+              icon: {
+                url: "https://cdn-icons-png.flaticon.com/128/635/635705.png",
+                scaledSize: new window.google.maps.Size(25, 25),
+              },
+            });
+          }
 
           const directionsService = new window.google.maps.DirectionsService();
           const directionsRenderer = new window.google.maps.DirectionsRenderer({
@@ -152,7 +147,7 @@ const BusDetails = () => {
           });
 
           const waypoints = validWaypoints.map((waypoint) => ({
-            location: new window.google.maps.LatLng(waypoint.lat, waypoint.lng),
+            location: new window.google.maps.LatLng(waypoint!.lat, waypoint!.lng),
             stopover: true,
           }));
 
@@ -190,16 +185,6 @@ const BusDetails = () => {
         Finding buses for you...
       </div>
     );
-
-  const handleFetch = async () => {
-    try {
-      const response = await axios.post(`/api/trip/${id}`, id);
-      const data = response.data;
-      console.log(data);
-    } catch (error) {
-      console.error("Failed to fetch bus data", error);
-    }
-  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

@@ -29,7 +29,7 @@ const Navbar: React.FC<Props> = ({ currentUser, menu, setMenu, items }: Props) =
         <div className="flex items-center gap-3 text-xl font-semibold">
           <div className="">
             <Link href="/" className="hidden md:flex">
-              Website
+              SIH
             </Link>
           </div>
         </div>
