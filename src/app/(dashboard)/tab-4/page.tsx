@@ -72,7 +72,6 @@ const responsivePopup = {
 };
 
 const App: FC = () => {
-  const [defaultEvents, setDefaultEvents] = useState<TripEvent[]>([]);
   const [tempEvent, setTempEvent] = useState<TripEvent>();
   const [isOpen, setOpen] = useState<boolean>(false);
   const [isEdit, setEdit] = useState<boolean>(false);
@@ -101,11 +100,12 @@ const App: FC = () => {
     setDrivers(data.drivers);
     setBuses(data.buses);
     setConductors(data.conductors);
+  
     setMyEvents(
       data.trips.map((trip: any) => ({
         id: trip.id,
-        start: trip.startAt,
-        end: trip.endAt,
+        start: new Date(trip.startAt),
+        end: new Date(trip.endAt),
         fromId: trip.fromId,
         toId: trip.toId,
         driverId: trip.driverId,
@@ -155,7 +155,7 @@ const App: FC = () => {
       const index = myEvents?.findIndex((x) => x.id === tempEvent!.id);
       const newEventList = [...myEvents!];
       newEventList.splice(index!, 1, newEvent);
-      setMyEvents(newEventList);
+      // setMyEvents(newEventList);
     } else {
       handleCreateTrip(newEvent);
     }
@@ -307,7 +307,7 @@ const App: FC = () => {
         display="bottom"
         fullScreen={true}
         contentPadding={false}
-        headerText={"hello"}
+        headerText={headerText}
         anchor={anchor}
         buttons={popupButtons}
         isOpen={isOpen}
