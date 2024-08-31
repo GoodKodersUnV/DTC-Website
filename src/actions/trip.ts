@@ -21,19 +21,12 @@ export const getTrip = async (id: string) => {
       where: {
         id,
       },
-<<<<<<< HEAD
         include : {
           driver:true,
           from : true,
           to : true,
           wayPoints : true,
           liveLocation:true,
-=======
-      include: {
-        driver: true,
-        from: true,
-        to: true,
->>>>>>> 1ab26c6c68d1902d7012d55075b0ea9daab2553f
       },
     });
     return trip;

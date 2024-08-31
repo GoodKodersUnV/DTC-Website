@@ -37,6 +37,12 @@ export default function HomeLayout({
       path: "/tab2",
       isActive: pathname === "/tab2",
     },
+    {
+      name: "Tab3",
+      icon: <MdOutlineQueryStats />,
+      path: "/tab3",
+      isActive: pathname === "/tab3",
+    },
   ];
   return (
     <div className="w-full">
