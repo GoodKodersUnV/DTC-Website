@@ -21,12 +21,19 @@ export const getTrip = async (id: string) => {
       where: {
         id,
       },
+<<<<<<< HEAD
         include : {
           driver:true,
           from : true,
           to : true,
           wayPoints : true,
           liveLocation:true,
+=======
+      include: {
+        driver: true,
+        from: true,
+        to: true,
+>>>>>>> 1ab26c6c68d1902d7012d55075b0ea9daab2553f
       },
     });
     return trip;
@@ -35,13 +42,82 @@ export const getTrip = async (id: string) => {
   }
 };
 
-export const createTrip = async (data: any) => {
+export const getDriverTripDetails = async (username: string) => {
   try {
-    const trip = await db.trip.create({
-      data,
+    const trip = await db.trip.findMany({
+      where: {
+        driver: {
+          username: username.toUpperCase(),
+        },
+      },
+      include: {
+        from: true,
+        to: true,
+        Vehicle: true,
+        conductor: true,
+      },
     });
     return trip;
   } catch (e) {
-    throw new Error("Trip not created");
+    throw new Error("Trip not found");
+  }
+};
+
+export const getDriverTripDetailsByDate = async (
+  username: string,
+  date: string
+) => {
+  try {
+    const trip = await db.trip.findMany({
+      where: {
+        driver: {
+          username: username.toUpperCase(),
+        },
+        startAt: {
+          gte: new Date(date),
+          lt: new Date(date + "T23:59:59"),
+        },
+      },
+      include: {
+        from: true,
+        to: true,
+        Vehicle: true,
+        conductor: true,
+      },
+    });
+    return trip;
+  } catch (e) {
+    throw new Error("Trip not found");
+  }
+};
+
+export const getDriverTripDetailsByRange = async (
+  username: string,
+  startDate: string,
+  endDate: string
+) => {
+  try {
+    const trip = await db.trip.findMany({
+      where: {
+        driver: {
+          username: username.toUpperCase(),
+        },
+        startAt: {
+          gte: new Date(startDate),
+        },
+        endAt: {
+          lte: new Date(endDate),
+        },
+      },
+      include: {
+        from: true,
+        to: true,
+        Vehicle: true,
+        conductor: true,
+      },
+    });
+    return trip;
+  } catch (e) {
+    throw new Error("Trip not found");
   }
 };
