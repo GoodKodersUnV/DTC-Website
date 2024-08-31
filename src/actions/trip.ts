@@ -3,11 +3,12 @@ import { db } from "@/lib/db";
 export const getTrips = async () => {
   try {
     const trips = await db.trip.findMany({
-      include : {
-        from : true,
-        to:true,
-        driver:true
-      }
+      include: {
+        from: true,
+        to: true,
+        driver: true,
+        wayPoints: true,
+      },
     });
     return trips;
   } catch (e) {
@@ -21,14 +22,19 @@ export const getTrip = async (id: string) => {
       where: {
         id,
       },
-        include : {
-          driver:true,
-          from : true,
-          to : true,
-          wayPoints : true,
-          liveLocation:true,
+      include: {
+        from: true,
+        to: true,
+        wayPoints: {
+          include: {
+            location: true,
+          },
+        },
+        liveLocation: true,
+        Vehicle: true,
       },
     });
+
     return trip;
   } catch (e) {
     throw new Error("Trip not found");
