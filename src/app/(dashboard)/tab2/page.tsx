@@ -11,6 +11,7 @@ interface Bus {
   stopLocation: string;
   waypoints: string[];
   liveLocation: string;
+  busNumber: string;
 }
 
 interface FormData {
@@ -22,7 +23,7 @@ const Page = () => {
   const router = useRouter();
   const { register, watch } = useForm<FormData>();
 
-  const busData = [
+  const busData: Bus[] = [
     {
       id: 1,
       startLocation: 'MG Bus Station',
@@ -153,15 +154,15 @@ const Page = () => {
             <div className="bg-gray-50 p-2 rounded-lg">
               <div className="flex justify-between mb-1">
                 <div className="text-gray-600">
-                  Departure: <span className="font-medium text-gray-800">20:10</span>
+                  Departure: <span className="font-medium text-gray-800">12:00</span>
                 </div>
                 <div className="text-gray-600">
-                  Arrival: <span className="font-medium text-gray-800">10:30</span>
+                  Arrival: <span className="font-medium text-gray-800">3:00</span>
                 </div>
               </div>
               <div className="flex justify-between">
                 <div className="text-gray-600">
-                  <span className="font-medium text-gray-800">TS1957883</span>
+                  <span className="font-medium text-gray-800">{bus.busNumber}</span>
                 </div>
                 <div className="text-gray-600">
                   <span className="font-medium text-gray-800">DTC</span>
