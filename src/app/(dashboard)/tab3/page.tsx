@@ -104,8 +104,8 @@ const App: FC = () => {
     setMyEvents(
       data.trips.map((trip: any) => ({
         id: trip.id,
-        start: trip.startAt,
-        end: trip.endAt,
+        start: new Date(trip.startAt),
+        end: new Date(trip.endAt),
         fromId: trip.fromId,
         toId: trip.toId,
         driverId: trip.driverId,
