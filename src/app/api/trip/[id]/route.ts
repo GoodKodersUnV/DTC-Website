@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const { id } = await request.json();
     const trip = await getTrip(id);
-    
+
     return NextResponse.json(trip, { status: 200 });
   } catch (e) {
     return NextResponse.json(
