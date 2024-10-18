@@ -8,6 +8,7 @@ export const getTrips = async () => {
         to: true,
         driver: true,
         wayPoints: true,
+        Vehicle: true,
       },
     });
     return trips;
@@ -113,6 +114,26 @@ export const getDriverTripDetailsByRange = async (
         to: true,
         Vehicle: true,
         conductor: true,
+      },
+    });
+    return trip;
+  } catch (e) {
+    throw new Error("Trip not found");
+  }
+};
+
+export const addWayPointToTrip = async (tripId: string, locationId: string) => {
+  try {
+    const trip = await db.trip.update({
+      where: {
+        id: tripId,
+      },
+      data: {
+        wayPoints: {
+          connect: {
+            id: locationId,
+          },
+        },
       },
     });
     return trip;
